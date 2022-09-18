@@ -35,11 +35,14 @@ make install-python env
 ## Setup wordpress server  
 
 Pour créer et configurer le serveur wordpress (wp-app, wp-bdd), vous avez juste à taper cette commande :  
-
---> make pprod-core-lxd  
+```
+make pprod-core-lxd  
+```
 
 Pour détruire le serveur wordpress :  
---> make pprod-core-lxd-destroy  
+```
+make pprod-core-lxd-destroy  
+```
 
 ## LXD REMOTE HOST REQUIREMENTS
 Cette collection utilise le module remote LXD. Pour cela vous devez créer et configurer un serveur LXD qui utilise le remote access  
@@ -56,7 +59,7 @@ export LXD_REMOTE_HOST_PASSWORD=password42
 
 ## SSH ACCESS
 Vous devez également configurer un accès ssh à votre host LXD.  
-Ansible à besoin d'un accès ssh aux container pour pouvoir les configurer. Les containers ne disposant pas d'adresse ip publique, j'utilise un rebond afin de pouvoir les atteindre :  
+Ansible à besoin d'un accès ssh aux containers pour pouvoir les configurer. Les containers ne disposant pas d'adresse ip publique, j'utilise un rebond afin de pouvoir les atteindre :  
 
 ```
 Host {{ project_workspace }}-lxd-host
