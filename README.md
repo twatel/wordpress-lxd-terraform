@@ -44,6 +44,8 @@ Pour détruire le serveur wordpress :
 make pprod-core-lxd-destroy  
 ```
 
+Après le déploiement, il ne vous reste plus qu'à rediriger le traffic internet entrant vers votre container  
+
 ## LXD REMOTE HOST REQUIREMENTS
 Cette collection utilise le module remote LXD. Pour cela vous devez créer et configurer un serveur LXD qui utilise le remote access  
 Le lien ci-dessous explique comment configurer cela :  
