@@ -2,20 +2,20 @@
 
 Cette collection à pour but de configuer un serveur wordpress sur un noeud lxd   
 
-Cette collection utilise : 
-    - ansible  
-    - terraform  
-    - terraform-lxd  
-    - lxd  
-    - direnv  
+Cette collection utilise :  
+  - ansible  
+  - terraform  
+  - terraform-lxd  
+  - lxd  
+  - direnv  
 
 ## Requirements
 
 Vous devez au minimum installer les paquets suivants :  
-    - make  
-    - direnv  
-    - curl  
-    - zip  
+  - make  
+  - direnv  
+  - curl  
+  - zip  
 
 ```
 apt-get install -y make direnv curl zip 
