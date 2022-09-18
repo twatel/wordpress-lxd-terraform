@@ -1,11 +1,11 @@
-resource "lxd_cached_image" "ubuntu1804" {
+resource "lxd_cached_image" "ubuntu2204" {
   source_remote = "ubuntu"
-  source_image  = "18.04"
+  source_image  = "22.04"
 }
 
 resource "lxd_container" "app-server" {
   name      = "${local.instance_name_prefix}-wp-app"
-  image     = lxd_cached_image.ubuntu1804.fingerprint
+  image     = lxd_cached_image.ubuntu2204.fingerprint
   ephemeral = false
 
   config = {
@@ -28,7 +28,7 @@ resource "lxd_container" "app-server" {
 
 resource "lxd_container" "bdd-server" {
   name      = "${local.instance_name_prefix}-wp-bdd"
-  image     = lxd_cached_image.ubuntu1804.fingerprint
+  image     = lxd_cached_image.ubuntu2204.fingerprint
   ephemeral = false
 
   config = {
