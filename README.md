@@ -51,7 +51,7 @@ Cette collection utilise le module remote LXD. Pour cela vous devez créer et co
 Le lien ci-dessous explique comment configurer cela :  
 - https://stgraber.org/2016/04/12/lxd-2-0-remote-hosts-and-container-migration-612/  
 
-Après l'installation de ce serveur, il ne vous reste plus qu'à configurer un fichier .env.local à la racine de ce dossier :  
+Après l'installation de ce serveur, il ne vous reste plus qu'à configurer un fichier .env.local à la racine du projet :  
 
 ```
 export LXD_REMOTE_HOST_NAME=lxd_remote_host_42
@@ -90,4 +90,6 @@ Host {{ project_workspace }}-*
 ```
 
 Votre clé ssh vers le noeud LXD doit se situer à la racine du projet :  
-  * secrets/lxd-host/id_ed25519
+  * secrets/lxd-host/id_ed25519  
+
+Toute la configuration SSH des containers se fait automatiquement  
