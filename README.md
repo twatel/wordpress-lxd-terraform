@@ -3,19 +3,19 @@
 Cette collection à pour but de configuer un serveur wordpress sur un noeud lxd   
 
 Cette collection utilise :  
-  - ansible  
-  - terraform  
-  - terraform-lxd  
-  - lxd  
-  - direnv  
+  * ansible  
+  * terraform  
+  * terraform-lxd  
+  * lxd  
+  * direnv  
 
 ## Requirements
 
 Vous devez au minimum installer les paquets suivants :  
-  - make  
-  - direnv  
-  - curl  
-  - zip  
+  * make  
+  * direnv  
+  * curl  
+  * zip  
 
 ```
 apt-get install -y make direnv curl zip 
@@ -88,4 +88,4 @@ Host {{ project_workspace }}-*
 ```
 
 Votre clé ssh vers le noeud LXD doit se situer à la racine du projet :  
-    - secrets/lxd-host/id_ed25519
+  * secrets/lxd-host/id_ed25519
