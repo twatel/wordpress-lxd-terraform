@@ -1,0 +1,102 @@
+#!/usr/bin/env ansible-playbook
+---
+- name: Deploying sftp server
+  hosts: localhost
+  gather_facts: yes
+  become: false
+  vars:
+    tf_module_name: "lxd"
+    ssh_private_key_file: "{{ project_secrets_directory }}/id_ed25519"
+    ssh_public_key_file: "{{ ssh_private_key_file }}.pub"
+
+  tasks:
+    - name: sanity_checks
+      include_tasks: inc/tf_sanity_checks.yml
+
+    - name: APPLY - Create SSH private keys pair
+      community.crypto.openssh_keypair:
+        path: "{{ ssh_private_key_file }}"
+        type: ed25519
+      when: tf_action == 'apply'
+
+    - name: DESTROY - Remove clan definition from inventory group
+      file:
+        path: "{{ project_workspace_root }}/hosts"
+        state: absent
+      when: tf_action == 'destroy'
+    
+    - name: DESTROY - Remove clan configuration from ssh config file
+      file:
+        path: "{{ project_workspace_root }}/ssh.cfg"
+        state: absent
+      when: tf_action == 'destroy'
+
+    - name: Copy terraform sources    # noqa risky-file-permissions
+      copy:
+        src: "{{ tf_module_src }}"
+        dest: "{{ tf_module_dest }}"
+      when: tf_action == 'apply'
+    
+    - name: APPLY - Define Terraform provider
+      blockinfile:
+        path: "{{ tf_module_dest }}/provider.tf"
+        state: present
+        create: true
+        mode: 0640
+        marker: "{{ tf_core_block_marker }}"
+        block: |
+          {{ lookup('template', '_tf_core_provider.j2') }}
+      when: tf_action == 'apply'
+
+    - name: COMMON - Do Terraform
+      community.general.terraform:
+        project_path: "{{ tf_module_dest }}"
+        state: "{{ (tf_action == 'destroy') | ternary('absent', 'present') }}"
+        workspace: "{{ project_workspace }}"
+        force_init: true
+        variables:
+          ssh_public_key_file: "{{ ssh_public_key_file }}"
+      register: tf_result
+      tags: tf
+
+    - name: APPLY - Terraform output extract
+      set_fact:
+        wp_app_ipv4: "{{ tf_result.outputs.wp_app_ipv4.value }}"
+        wp_bdd_ipv4: "{{ tf_result.outputs.wp_bdd_ipv4.value }}"
+        current_ssh_user: "{{ tf_result.outputs.raw_ssh_user.value }}"
+        lxd_remote_ipv4: "{{ tf_result.outputs.lxd_remote_ipv4.value }}"
+      when: tf_action == 'apply'
+
+    - name: APPLY - Add raw and ready host definitions to ssh config
+      blockinfile:
+        path: "{{ project_workspace_root }}/ssh.cfg"
+        state: present
+        create: true
+        mode: 0640
+        marker: "{{ tf_core_block_marker }}"
+        block: |
+          {{ lookup('template', '_tf_core_ssh_cfg.j2') }}
+      when: tf_action == 'apply'
+
+    - name: APPLY - Add raw and ready host definitions to inventory config
+      blockinfile:
+        path: "{{ project_workspace_root }}/hosts"
+        state: present
+        create: true
+        mode: 0640
+        marker: "{{ tf_core_block_marker }}"
+        block: |
+          {{ lookup('template', '_tf_core_inventory.j2') }}
+      when: tf_action == 'apply'
+
+    - name: APPLY - Render required variables for mysql & wordpress ansible role
+      blockinfile:
+        path: "{{ project_workspace_group_vars_dir }}/main.yml"
+        state: present
+        create: true
+        mode: 0640
+        marker: "{{ tf_core_block_marker }}"
+        block: |
+          {{ lookup('template', '_tf_ansible_role_vars.j2') }}
+      when: tf_action == 'apply'
+

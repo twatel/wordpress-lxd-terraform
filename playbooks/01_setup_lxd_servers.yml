@@ -1,0 +1,17 @@
+#!/usr/bin/env ansible-playbook
+---
+- name: Setup wp bdd server
+  hosts: "{{ lookup('env', 'PROJECT_ENVIRONMENT') }}-wp-bdd"
+  become: true
+  gather_facts: yes
+  
+  roles:
+    - ansible-role-mariadb
+
+- name: Setup wp app server
+  hosts: "{{ lookup('env', 'PROJECT_ENVIRONMENT') }}-wp-app"
+  become: true
+  gather_facts: yes
+  
+  roles:
+    - ansible-role-wordpress

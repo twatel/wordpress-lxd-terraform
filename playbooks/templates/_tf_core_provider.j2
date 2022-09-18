@@ -1,0 +1,14 @@
+
+provider "lxd" {
+  generate_client_certificates = true
+  accept_remote_certificate    = true
+
+  lxd_remote {
+    name     = "{{ lxd_remote_host_name }}"
+    scheme   = "https"
+    address  = "{{ lxd_remote_host_address }}"
+    password = "{{ lxd_remote_host_password }}"
+    default  = true
+  }
+
+}

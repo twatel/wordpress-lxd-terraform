@@ -1,0 +1,21 @@
+---
+collection_root: "{{ (playbook_dir + '/../') | realpath }}"
+
+project_workspace_root: "{{ lookup('env', 'PWD') }}"
+project_workspace: "{{ lookup('env', 'PROJECT_ENVIRONMENT') }}"
+project_workspace_tf_modules_dir: "{{ collection_root }}/{{ project_workspace }}/terraform"
+project_secrets_directory: "{{ collection_root }}/secrets/{{ project_workspace }}"
+project_workspace_group_vars_dir: "{{ collection_root }}/group_vars/{{ project_workspace }}"
+
+collection_tf_modules_dir: "{{ collection_root }}/terraform"
+
+tf_module_src: "{{ collection_tf_modules_dir }}/{{ tf_module_name }}/"
+tf_module_dest: "{{ project_workspace_tf_modules_dir }}/{{ tf_module_name }}"
+
+tf_core_block_marker: >-
+  # {mark}--playbooks/tf_core.yml--{{ project_workspace }}
+
+### LXD REMOTE HOST CREDENTIALS ###
+lxd_remote_host_name: "{{ lookup('env', 'LXD_REMOTE_HOST_NAME') }}"
+lxd_remote_host_address: "{{ lookup('env', 'LXD_REMOTE_HOST_ADDRESS') }}"
+lxd_remote_host_password: "{{ lookup('env', 'LXD_REMOTE_HOST_PASSWORD') }}"

@@ -1,0 +1,22 @@
+Host {{ project_workspace }}-lxd-host
+  HostName {{ lxd_remote_ipv4 }}
+  User lxd-user
+  IdentityFile  {{ collection_root }}/secrets/lxd-host/id_ed25519
+
+Host {{ project_workspace }}-wp-app
+  Hostname {{ wp_app_ipv4 }}
+  ProxyCommand ssh -F ssh.cfg -W %h:%p {{ project_workspace }}-lxd-host
+
+Host {{ project_workspace }}-wp-bdd
+  Hostname {{ wp_bdd_ipv4 }}
+  ProxyCommand ssh -F ssh.cfg -W %h:%p {{ project_workspace }}-lxd-host
+
+Host {{ project_workspace }}-*
+  User {{ current_ssh_user }}
+  IdentityFile  {{ ssh_private_key_file }}
+  StrictHostKeyChecking no
+  UserKnownHostsFile /dev/null
+  ControlMaster   auto
+  ControlPersist  15m
+  ServerAliveInterval 100
+  TCPKeepAlive yes
